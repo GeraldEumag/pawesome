@@ -14,6 +14,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
+            'middle_name' => 'sometimes|string|max:255',
             'last_name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|string|email|max:255|unique:users,email',
@@ -40,6 +41,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'username' => $request->username,
             'email' => $request->email,
@@ -126,6 +128,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|string|max:255',
             'first_name' => 'sometimes|string|max:255',
+            'middle_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
             'username' => 'sometimes|string|max:255|unique:users,username,' . $user->id,
             'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
@@ -143,7 +146,7 @@ class AuthController extends Controller
         }
 
         $allowedFields = [
-            'name', 'first_name', 'last_name', 'username', 'email', 
+            'name', 'first_name', 'middle_name', 'last_name', 'username', 'email', 
             'phone', 'address', 'city', 'state', 'zip_code', 'country', 'bio'
         ];
         

@@ -9,6 +9,7 @@ import Grooming from "../components/receptionist/Grooming";
 import ReceptionistBookings from "../components/receptionist/ReceptionistBookings";
 import CustomerManagement from "../components/receptionist/CustomerManagement";
 import CustomersProfile from "../components/receptionist/CustomersProfile";
+import ReceptionistProfile from "../components/receptionist/ReceptionistProfile";
 import AppointmentList from "../components/receptionist/AppointmentList";
 import CheckInForm from "../components/receptionist/CheckInForm";
 import CheckOutForm from "../components/receptionist/CheckOutForm";
@@ -36,7 +37,7 @@ const ReceptionistRoutes = () => (
       <Route path="bookings/grooming" element={<Grooming />} />
       <Route path="customers" element={<CustomerManagement />} />
       <Route path="customer-profile" element={<CustomersProfile />} />
-      <Route path="profile" element={<AppointmentList />} />
+      <Route path="profile" element={<ReceptionistProfile />} />
       <Route path="reports" element={<Reports />} />
     </Route>
   </Routes>

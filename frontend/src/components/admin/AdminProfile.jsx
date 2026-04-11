@@ -33,6 +33,7 @@ const AdminProfile = () => {
     id: null,
     name: "",
     first_name: "",
+    middle_name: "",
     last_name: "",
     email: "",
     username: "",
@@ -120,6 +121,7 @@ const AdminProfile = () => {
           id: userData.id,
           name: userData.name || "",
           first_name: userData.first_name || "",
+          middle_name: userData.middle_name || "",
           last_name: userData.last_name || "",
           email: userData.email || "",
           username: userData.username || "",
@@ -328,6 +330,7 @@ const AdminProfile = () => {
       const updateData = {
         name: profileData.name,
         first_name: profileData.first_name,
+        middle_name: profileData.middle_name,
         last_name: profileData.last_name,
         email: profileData.email,
         username: profileData.username,
@@ -362,33 +365,54 @@ const AdminProfile = () => {
     // Validation
     if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
       showError("Please fill in all password fields.");
+      setTimeout(() => setError(""), 3000);
       return;
     }
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      showError("New passwords do not match.");
+      showError("New password and confirm password do not match.");
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
+
+    if (passwordData.newPassword === passwordData.currentPassword) {
+      showError("New password must be different from current password.");
+      setTimeout(() => setError(""), 3000);
       return;
     }
 
     if (passwordData.newPassword.length < 8) {
       showError("Password must be at least 8 characters long.");
+      setTimeout(() => setError(""), 3000);
       return;
     }
 
     try {
-      setError("");
-      
-      // Change password via API
-      await apiRequest("/auth/change-password", {
+      setLoading(true);
+      const response = await apiRequest("/auth/change-password", {
         method: "POST",
         body: JSON.stringify({
           current_password: passwordData.currentPassword,
           new_password: passwordData.newPassword,
           new_password_confirmation: passwordData.confirmPassword,
-        }),
+        })
       });
-      
-      showSuccess("Password changed successfully!");
+
+      if (response.message) {
+        showSuccess("Password changed successfully!");
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+        setTimeout(() => setError(""), 3000);
+        
+        // Auto logout after successful password change
+        setTimeout(() => {
+          localStorage.clear();
+          window.location.href = "/login";
+        }, 2000);
+      }
       setPasswordData({
         currentPassword: "",
         newPassword: "",
@@ -509,6 +533,17 @@ const AdminProfile = () => {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   placeholder="Enter your first name"
+                />
+              </div>
+              <div className="form-group">
+                <label>Middle Name</label>
+                <input
+                  type="text"
+                  name="middle_name"
+                  value={profileData.middle_name}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                  placeholder="Enter your middle name"
                 />
               </div>
               <div className="form-group">

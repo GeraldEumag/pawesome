@@ -150,6 +150,7 @@ const Register = () => {
       const registrationData = {
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         first_name: formData.firstName,
+        middle_name: formData.middleName,
         last_name: formData.lastName,
         email: formData.emailAddress,
         username: formData.username,
