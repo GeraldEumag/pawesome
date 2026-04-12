@@ -44,6 +44,7 @@ const CustomersProfile = () => {
   const [selectedPet, setSelectedPet] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
+  // Small update for git tracking
   const [customerFormData, setCustomerFormData] = useState({
     firstName: "",
     middleName: "",

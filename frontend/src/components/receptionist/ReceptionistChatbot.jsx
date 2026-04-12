@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./ReceptionistChatbot.css";
 
+// Small update for git tracking
 const ReceptionistChatbot = () => {
   const [messages, setMessages] = useState([
     {

@@ -19,6 +19,7 @@ import ReceptionistSidebar from "./ReceptionistSidebar";
 import "./ReceptionistDashboard.css";
 import { apiRequest } from "../../api/client";
 
+// Small update for git tracking
 const ReceptionistDashboard = () => {
   const name = localStorage.getItem("name") || "Receptionist";
   const [theme, setTheme] = useState("light");

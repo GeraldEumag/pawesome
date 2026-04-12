@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./AppointmentList.css";
 
+// Small update for git tracking
 const AppointmentList = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");

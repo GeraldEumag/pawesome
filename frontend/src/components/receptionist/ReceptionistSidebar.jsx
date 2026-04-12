@@ -20,6 +20,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./ReceptionistSidebar.css";
 
+// Small update for git tracking
 const ReceptionistSidebar = ({ collapsed, onToggleCollapse }) => {
   const [bookingsExpanded, setBookingsExpanded] = React.useState(false);
   const navigate = useNavigate();

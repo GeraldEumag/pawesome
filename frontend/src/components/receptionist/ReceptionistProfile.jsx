@@ -17,6 +17,7 @@ import {
 import { apiRequest } from "../../api/client";
 import "./ReceptionistProfile.css";
 
+// Small update for git tracking
 const ReceptionistProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
