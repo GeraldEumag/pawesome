@@ -1,5 +1,81 @@
 /* Customer Pets - Baby Blue & Pink Theme */
 
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: 16px;
+}
+
+.loading-container {
+  color: #007bff;
+}
+
+.error-container {
+  color: #dc3545;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.loading-container svg,
+.error-container svg {
+  font-size: 20px;
+}
+
+/* No Pets State */
+.no-pets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.no-pets svg {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #dee2e6;
+}
+
+.no-pets p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Pet Status Icons */
+.health-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.health-status svg {
+  font-size: 14px;
+}
+
+.health-status.healthy {
+  color: #28a745;
+}
+
+.health-status.attention {
+  color: #ffc107;
+}
+
+.health-status.critical {
+  color: #dc3545;
+}
+
 /* Hide all arrows from forms */
 .customer-pets *::before,
 .customer-pets *::after {

@@ -10,6 +10,7 @@ import {
   faBars,
   faUser,
   faBone,
+  faChartBar,
 } from "@fortawesome/free-solid-svg-icons";
 import "./CustomerSidebar.css";
 
@@ -80,6 +81,17 @@ const CustomerSidebar = ({ collapsed, onToggleCollapse }) => {
             >
               <FontAwesomeIcon icon={faShoppingCart} />
               {!collapsed && <span>Store</span>}
+            </NavLink>
+          </li>
+          
+          <li className="nav-item">
+            <NavLink
+              to="/customer/reports"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              title="Reports"
+            >
+              <FontAwesomeIcon icon={faChartBar} />
+              {!collapsed && <span>Reports</span>}
             </NavLink>
           </li>
           

@@ -1,5 +1,187 @@
 /* Customer Bookings - Baby Blue & Pink Theme */
 
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+  font-size: 16px;
+}
+
+.loading-container {
+  color: #007bff;
+}
+
+.error-container {
+  color: #dc3545;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.loading-container svg,
+.error-container svg {
+  font-size: 20px;
+}
+
+/* No Bookings State */
+.no-bookings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.no-bookings svg {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #dee2e6;
+}
+
+/* Booking Actions */
+.booking-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-btn {
+  background: #007bff;
+  color: white;
+}
+
+.view-btn:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+.cancel-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+.reschedule-btn {
+  background: #28a745;
+  color: white;
+}
+
+.reschedule-btn:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Bookings Header */
+.bookings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(255, 107, 157, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.header-content h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.header-content p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.refresh-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: #0056b3;
+  transform: rotate(180deg);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.no-bookings p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Booking Status Icons */
+.booking-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.booking-status svg {
+  font-size: 14px;
+}
+
+.booking-status.confirmed {
+  color: #28a745;
+}
+
+.booking-status.pending {
+  color: #ffc107;
+}
+
+.booking-status.cancelled {
+  color: #dc3545;
+}
+
 /* Hide all arrows from booking cards */
 .customer-bookings *::before,
 .customer-bookings *::after {

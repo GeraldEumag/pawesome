@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,7 +12,10 @@ import {
   faHistory,
   faUser,
   faArrowUp,
+  faSpinner,
+  faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
+import { apiRequest } from "../../api/client";
 import CustomerSidebar from "./CustomerSidebar";
 import CustomerChatbot from "./CustomerChatbot";
 import "./CustomerDashboard.css";
@@ -24,56 +27,150 @@ const CustomerDashboard = () => {
   const [unreadNotifications] = useState(3);
   const location = useLocation();
 
+  // Backend data states
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const normalizedPath = location.pathname.replace(/\/+$/, "");
   const showOverview = normalizedPath === "/customer";
 
-  const summaryCards = [
-    {
-      title: "Active Bookings",
-      value: 3,
-      subtitle: "Current reservations",
-      change: "+1",
-    },
-    {
-      title: "Total Pets",
-      value: 5,
-      subtitle: "Registered pets",
-      change: "+2",
-    },
-    {
-      title: "Completed Services",
-      value: 24,
-      subtitle: "This month",
-      change: "+8",
-    },
-    {
-      title: "Loyalty Points",
-      value: 850,
-      subtitle: "Available points",
-      change: "+50",
-    },
-  ];
+  // Mock data structure ready for backend connection
+  const mockDashboardData = {
+    summaryCards: [
+      {
+        title: "Active Bookings",
+        value: 3,
+        subtitle: "Current reservations",
+        change: "+1",
+      },
+      {
+        title: "Total Pets",
+        value: 5,
+        subtitle: "Registered pets",
+        change: "+2",
+      },
+      {
+        title: "Completed Services",
+        value: 24,
+        subtitle: "This month",
+        change: "+8",
+      },
+      {
+        title: "Loyalty Points",
+        value: 850,
+        subtitle: "Available points",
+        change: "+50",
+      },
+    ],
+    recentBookings: [
+      {
+        id: 1,
+        petName: "Max",
+        service: "Grooming",
+        date: "2026-03-28",
+        status: "confirmed",
+      },
+      {
+        id: 2,
+        petName: "Bella",
+        service: "Boarding",
+        date: "2026-03-30",
+        status: "pending",
+      },
+      {
+        id: 3,
+        petName: "Charlie",
+        service: "Veterinary Checkup",
+        date: "2026-04-02",
+        status: "confirmed",
+      },
+    ],
+    pets: [
+      {
+        id: 1,
+        name: "Max",
+        type: "Dog",
+        breed: "Golden Retriever",
+        age: 3,
+        image: null,
+      },
+      {
+        id: 2,
+        name: "Bella",
+        type: "Cat",
+        breed: "Persian",
+        age: 2,
+        image: null,
+      },
+      {
+        id: 3,
+        name: "Charlie",
+        type: "Dog",
+        breed: "Labrador",
+        age: 1,
+        image: null,
+      },
+    ],
+    loyaltyPoints: 850,
+    memberStatus: "Gold",
+  };
 
-  const recentBookings = [
-    {
-      petName: "Max",
-      service: "Grooming",
-      date: "2026-03-28",
-      status: "confirmed",
-    },
-    {
-      petName: "Bella",
-      service: "Boarding",
-      date: "2026-03-30",
-      status: "pending",
-    },
-    {
-      petName: "Charlie",
-      service: "Veterinary Checkup",
-      date: "2026-04-02",
-      status: "confirmed",
-    },
-  ];
+  // Fetch dashboard data from backend
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch real dashboard data from backend
+        const data = await apiRequest("/customer/dashboard");
+        setDashboardData(data);
+        setError("");
+      } catch (err) {
+        setError(err.message || "Failed to load dashboard data");
+        console.error("Dashboard data fetch error:", err);
+        setDashboardData(mockDashboardData); // Fallback to mock data
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (showOverview) {
+      fetchDashboardData();
+    }
+  }, [showOverview]);
+
+  // Refresh dashboard data manually
+  const refreshDashboard = async () => {
+    try {
+      setLoading(true);
+      const data = await apiRequest("/customer/dashboard");
+      setDashboardData(data);
+      setError("");
+    } catch (err) {
+      setError(err.message || "Failed to refresh dashboard data");
+      console.error("Dashboard refresh error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Auto-refresh every 30 seconds for real-time updates
+  useEffect(() => {
+    if (!showOverview) return;
+
+    const interval = setInterval(() => {
+      refreshDashboard();
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [showOverview]);
+
+  const summaryCards = dashboardData?.summaryCards || mockDashboardData.summaryCards;
+  const recentBookings = dashboardData?.recentBookings || mockDashboardData.recentBookings;
+  const pets = dashboardData?.pets || mockDashboardData.pets;
+  const loyaltyPoints = dashboardData?.loyaltyPoints || mockDashboardData.loyaltyPoints;
+  const memberStatus = dashboardData?.memberStatus || mockDashboardData.memberStatus;
 
   return (
     <div className={`customer-dashboard ${theme} ${sidebarCollapsed ? "collapsed" : ""}`}>
@@ -97,6 +194,14 @@ const CustomerDashboard = () => {
           </div>
 
           <div className="navbar-actions">
+            <button 
+              onClick={refreshDashboard} 
+              className="refresh-btn"
+              disabled={loading}
+              title="Refresh Dashboard"
+            >
+              <FontAwesomeIcon icon={loading ? faSpinner : faArrowUp} spin={loading} />
+            </button>
             <NavLink to="/customer/profile" className="customer-profile-btn">
               <span className="profile-avatar-icon">
                 <FontAwesomeIcon icon={faUserCircle} />
@@ -128,17 +233,36 @@ const CustomerDashboard = () => {
 
         {showOverview ? (
           <>
-            <section className="overview-cards">
-              {summaryCards.map((card) => (
-                <div key={card.title} className="overview-card">
-                  <div>
-                    <h3>{card.value}</h3>
-                    <p>{card.title}</p>
-                  </div>
-                  <span>{card.change}</span>
-                </div>
-              ))}
-            </section>
+            {/* Loading State */}
+            {loading && (
+              <div className="loading-container">
+                <FontAwesomeIcon icon={faSpinner} spin />
+                <span>Loading dashboard data...</span>
+              </div>
+            )}
+
+            {/* Error State */}
+            {error && (
+              <div className="error-container">
+                <FontAwesomeIcon icon={faExclamationTriangle} />
+                <span>{error}</span>
+              </div>
+            )}
+
+            {/* Dashboard Content */}
+            {!loading && !error && (
+              <>
+                <section className="overview-cards">
+                  {summaryCards.map((card) => (
+                    <div key={card.title} className="overview-card">
+                      <div>
+                        <h3>{card.value}</h3>
+                        <p>{card.title}</p>
+                      </div>
+                      <span>{card.change}</span>
+                    </div>
+                  ))}
+                </section>
 
             <section className="dashboard-grid">
               <article className="panel overview-panel">
@@ -156,13 +280,13 @@ const CustomerDashboard = () => {
 
               <article className="panel quick-stat-panel">
                 <div className="metric-card accent">
-                  <h3>850</h3>
+                  <h3>{loyaltyPoints}</h3>
                   <p>Loyalty Points</p>
                   <small>Redeemable for services</small>
                 </div>
 
                 <div className="metric-card">
-                  <h3>Gold</h3>
+                  <h3>{memberStatus}</h3>
                   <p>Member Status</p>
                 </div>
               </article>
@@ -243,6 +367,8 @@ const CustomerDashboard = () => {
                 </div>
               </div>
             </section>
+              </>
+            )}
           </>
         ) : (
           <section className="dashboard-content">

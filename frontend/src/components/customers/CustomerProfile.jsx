@@ -2,13 +2,9 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
-  faEnvelope,
-  faPhone,
-  faMapMarkerAlt,
-  faCalendarAlt,
-  faCamera,
   faSave,
   faTimes,
+  faCamera,
   faLock,
   faEye,
   faEyeSlash,
@@ -89,7 +85,6 @@ const CustomerProfile = () => {
       if (!token) {
         console.log("No token found, cannot fetch profile");
         setError("No authentication token found. Please log in again.");
-        setLoading(false);
         return;
       }
       
@@ -276,6 +271,35 @@ const CustomerProfile = () => {
     }));
   };
 
+  // Handle account deletion
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      setSaving(true);
+      await apiRequest("/auth/delete-account", {
+        method: "DELETE"
+      });
+      
+      setMessage("Account deleted successfully. Redirecting to login...");
+      setMessageType("success");
+      setTimeout(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("name");
+        window.location.href = "/login";
+      }, 2000);
+    } catch (err) {
+      setMessage(err.message || "Failed to delete account");
+      setMessageType("error");
+      console.error("Account deletion error:", err);
+      setTimeout(() => setMessage(""), 3000);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // Fetch profile data on component mount
   useEffect(() => {
     fetchUserProfile();
@@ -307,33 +331,31 @@ const CustomerProfile = () => {
             <div className="profile-section">
               <h3>Personal Information</h3>
               <div className="profile-avatar-section">
-                <div className="avatar-container">
-                  {profileData.profileImage ? (
-                    <img 
-                      src={profileData.profileImage} 
-                      alt="Profile" 
-                      className="avatar-img"
+                {profileData.profileImage ? (
+                  <img 
+                    src={profileData.profileImage}
+                    alt="Profile" 
+                    className="avatar-img"
+                  />
+                ) : (
+                  <div className="avatar-img">
+                    <FontAwesomeIcon icon={faUser} size="3x" />
+                  </div>
+                )}
+                {isEditing && (
+                  <div>
+                    <input
+                      type="file"
+                      id="avatar-upload"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      style={{ display: 'none' }}
                     />
-                  ) : (
-                    <div className="avatar-img">
-                      <FontAwesomeIcon icon={faUser} size="3x" />
-                    </div>
-                  )}
-                  {isEditing && (
-                    <div>
-                      <input
-                        type="file"
-                        id="avatar-upload"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        style={{ display: 'none' }}
-                      />
-                      <label htmlFor="avatar-upload" className="avatar-upload-btn">
-                        <FontAwesomeIcon icon={faCamera} /> Change Photo
-                      </label>
-                    </div>
-                  )}
-                </div>
+                    <label htmlFor="avatar-upload" className="avatar-upload-btn">
+                      <FontAwesomeIcon icon={faCamera} /> Change Photo
+                    </label>
+                  </div>
+                )}
               </div>
 
               <div className="form-row">
@@ -418,6 +440,31 @@ const CustomerProfile = () => {
                   placeholder="Tell us about yourself and your pets..."
                 />
               </div>
+
+              <div className="btn-group">
+                {isEditing ? (
+                  <>
+                    <button className="btn-primary" onClick={handleSaveProfile} disabled={saving}>
+                      {saving ? (
+                        <>
+                          <FontAwesomeIcon icon={faSpinner} spin /> Saving...
+                        </>
+                      ) : (
+                        <>
+                          <FontAwesomeIcon icon={faSave} /> Save Changes
+                        </>
+                      )}
+                    </button>
+                    <button className="btn-secondary" onClick={handleCancel} disabled={saving}>
+                      <FontAwesomeIcon icon={faTimes} /> Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button className="btn-primary" onClick={toggleEditMode}>
+                    <FontAwesomeIcon icon={faSave} /> Edit Profile
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="profile-section">
@@ -485,84 +532,23 @@ const CustomerProfile = () => {
               </div>
             </div>
 
-            {/* Account Info */}
             <div className="profile-section">
               <h3>Account Information</h3>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Role</label>
-                  <input
-                    type="text"
-                    value="Customer"
-                    disabled
-                    style={{ backgroundColor: '#f8f9fa' }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Status</label>
-                  <input
-                    type="text"
-                    value="Active"
-                    disabled
-                    style={{ backgroundColor: '#f8f9fa' }}
-                  />
-                </div>
+              <div className="form-group">
+                <label>Member Since</label>
+                <input
+                  type="text"
+                  value={profileData.memberSince}
+                  disabled
+                  className="member-since-input"
+                />
               </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Member Since</label>
-                  <input
-                    type="text"
-                    value={profileData.memberSince}
-                    disabled
-                    style={{ backgroundColor: '#f8f9fa' }}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Last Updated</label>
-                  <input
-                    type="text"
-                    value="Today"
-                    disabled
-                    style={{ backgroundColor: '#f8f9fa' }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="btn-group">
-              {!isEditing ? (
-                <button className="btn-primary" onClick={toggleEditMode}>
-                  <FontAwesomeIcon icon={faUser} /> Edit Profile
-                </button>
-              ) : (
-                <div>
-                  <button className="btn-primary" onClick={handleSaveProfile} disabled={saving}>
-                    {saving ? (
-                      <>
-                        <FontAwesomeIcon icon={faSpinner} spin /> Saving...
-                      </>
-                    ) : (
-                      <>
-                        <FontAwesomeIcon icon={faSave} /> Save Changes
-                      </>
-                    )}
-                  </button>
-                  <button className="btn-secondary" onClick={handleCancel} disabled={saving}>
-                    <FontAwesomeIcon icon={faTimes} /> Cancel
-                  </button>
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Password Change Section */}
           <div className="profile-card password-section">
             <div className="profile-section">
-              <h3>
-                <FontAwesomeIcon icon={faLock} /> Change Password
-              </h3>
+              <h3>Change Password</h3>
               <div className="form-group">
                 <label>Current Password</label>
                 <div className="password-input-wrapper">
@@ -576,9 +562,11 @@ const CustomerProfile = () => {
                   <button
                     type="button"
                     className="password-toggle-btn"
-                    onClick={() => togglePasswordVisibility('currentPassword')}
+                    onClick={() => togglePasswordVisibility("currentPassword")}
                   >
-                    <FontAwesomeIcon icon={showPasswords.currentPassword ? faEyeSlash : faEye} />
+                    <FontAwesomeIcon 
+                      icon={showPasswords.currentPassword ? faEyeSlash : faEye} 
+                    />
                   </button>
                 </div>
               </div>
@@ -596,9 +584,11 @@ const CustomerProfile = () => {
                   <button
                     type="button"
                     className="password-toggle-btn"
-                    onClick={() => togglePasswordVisibility('newPassword')}
+                    onClick={() => togglePasswordVisibility("newPassword")}
                   >
-                    <FontAwesomeIcon icon={showPasswords.newPassword ? faEyeSlash : faEye} />
+                    <FontAwesomeIcon 
+                      icon={showPasswords.newPassword ? faEyeSlash : faEye} 
+                    />
                   </button>
                 </div>
               </div>
@@ -616,19 +606,25 @@ const CustomerProfile = () => {
                   <button
                     type="button"
                     className="password-toggle-btn"
-                    onClick={() => togglePasswordVisibility('confirmPassword')}
+                    onClick={() => togglePasswordVisibility("confirmPassword")}
                   >
-                    <FontAwesomeIcon icon={showPasswords.confirmPassword ? faEyeSlash : faEye} />
+                    <FontAwesomeIcon 
+                      icon={showPasswords.confirmPassword ? faEyeSlash : faEye} 
+                    />
                   </button>
                 </div>
               </div>
 
               <div className="password-requirements">
-                Password must be at least 8 characters long and contain both letters and numbers.
+                Password must be at least 8 characters long
               </div>
 
               <div className="btn-group">
-                <button className="btn-primary" onClick={handleChangePassword} disabled={changingPassword}>
+                <button 
+                  className="btn-primary" 
+                  onClick={handleChangePassword} 
+                  disabled={changingPassword}
+                >
                   {changingPassword ? (
                     <>
                       <FontAwesomeIcon icon={faSpinner} spin /> Changing Password...
@@ -636,6 +632,33 @@ const CustomerProfile = () => {
                   ) : (
                     <>
                       <FontAwesomeIcon icon={faLock} /> Change Password
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="profile-card">
+            <div className="profile-section">
+              <h3>Account Management</h3>
+              <p className="warning-text">
+                Deleting your account is permanent and cannot be undone. All your data including 
+                bookings, pets information, and payment history will be permanently removed.
+              </p>
+              <div className="btn-group">
+                <button 
+                  className="btn-danger" 
+                  onClick={handleDeleteAccount}
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <>
+                      <FontAwesomeIcon icon={faSpinner} spin /> Deleting Account...
+                    </>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon icon={faTimes} /> Delete Account
                     </>
                   )}
                 </button>

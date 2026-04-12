@@ -1,10 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPaw,
+  faPlus,
+  faEdit,
+  faTrash,
+  faHistory,
+  faSpinner,
+  faExclamationTriangle,
+  faSearch,
+  faTimes,
+  faSave,
+  faCalendarCheck,
+  faSyringe,
+  faPills,
+  faWeight,
+  faBirthdayCake,
+  faCamera,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons";
+import { apiRequest } from "../../api/client";
 import "./CustomerPets.css";
 
 const CustomerPets = () => {
   const name = localStorage.getItem("name") || "Customer";
   const [search, setSearch] = useState("");
-  const [pets, setPets] = useState([
+  
+  // Backend data states
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  // Modal states
+  const [editingPet, setEditingPet] = useState(null);
+  const [historyPet, setHistoryPet] = useState(null);
+  const [newPetModal, setNewPetModal] = useState(false);
+  const [selectedPet, setSelectedPet] = useState(null);
+
+  // Mock data structure ready for backend connection
+  const mockPetsData = [
     {
       id: 1,
       name: "Max",
@@ -41,12 +75,38 @@ const CustomerPets = () => {
       diet: "Weight management formula, 1.5 cups daily",
       notes: "Very active, loves long walks"
     },
-  ]);
+  ];
 
-  const [editingPet, setEditingPet] = useState(null);
-  const [historyPet, setHistoryPet] = useState(null);
-  const [newPetModal, setNewPetModal] = useState(false);
-  const [selectedPet, setSelectedPet] = useState(null);
+  const [pets, setPets] = useState(mockPetsData);
+
+  // Fetch pets data from backend
+  useEffect(() => {
+    const fetchPetsData = async () => {
+      try {
+        setLoading(true);
+        // TODO: Replace with actual API call
+        // const data = await apiRequest("/customer/pets");
+        // setPets(data);
+        
+        // Using mock data for now
+        setTimeout(() => {
+          setPets(mockPetsData);
+          setLoading(false);
+        }, 1000);
+        
+        setError("");
+      } catch (err) {
+        setError(err.message || "Failed to load pets data");
+        console.error("Pets data fetch error:", err);
+        // Fallback to mock data
+        setPets(mockPetsData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPetsData();
+  }, []);
 
   const handlePhotoUpload = (e, petId) => {
     const file = e.target.files[0];
@@ -58,34 +118,72 @@ const CustomerPets = () => {
     }
   };
 
-  const handleEditSave = (updatedPet) => {
-    setPets(pets.map((p) => (p.id === updatedPet.id ? updatedPet : p)));
-    setEditingPet(null);
+  const handleEditSave = async (updatedPet) => {
+    try {
+      setSubmitting(true);
+      // TODO: Replace with actual API call
+      // await apiRequest(`/customer/pets/${updatedPet.id}`, {
+      //   method: "PUT",
+      //   body: JSON.stringify(updatedPet)
+      // });
+      
+      // Mock update for now
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setPets(pets.map((p) => (p.id === updatedPet.id ? updatedPet : p)));
+      setEditingPet(null);
+    } catch (err) {
+      alert(`Failed to update pet: ${err.message || 'Unknown error'}`);
+      console.error("Pet update error:", err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleAddPet = (e) => {
+  const handleAddPet = async (e) => {
     e.preventDefault();
-    const form = e.target;
-    const newPet = {
-      id: pets.length + 1,
-      name: form.name.value,
-      type: form.type.value,
-      breed: form.breed.value,
-      age: form.age.value,
-      birthDate: form.birthDate.value,
-      weight: form.weight.value,
-      lastCheckup: form.lastCheckup.value,
-      health: form.health.value,
-      photo: null,
-      history: [],
-      vaccinations: [],
-      nextAppointment: "",
-      medications: [],
-      diet: "",
-      notes: ""
-    };
-    setPets([...pets, newPet]);
-    setNewPetModal(false);
+    setSubmitting(true);
+    
+    try {
+      const form = e.target;
+      const newPet = {
+        name: form.name.value,
+        type: form.type.value,
+        breed: form.breed.value,
+        age: form.age.value,
+        birthDate: form.birthDate.value,
+        weight: form.weight.value,
+        lastCheckup: form.lastCheckup.value,
+        health: form.health.value,
+        photo: null,
+        history: [],
+        vaccinations: [],
+        nextAppointment: "",
+        medications: [],
+        diet: "",
+        notes: ""
+      };
+      
+      // TODO: Replace with actual API call
+      // const response = await apiRequest("/customer/pets", {
+      //   method: "POST",
+      //   body: JSON.stringify(newPet)
+      // });
+      
+      // Mock creation for now
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const petWithId = { ...newPet, id: pets.length + 1 };
+      setPets([...pets, petWithId]);
+      setNewPetModal(false);
+      form.reset();
+      
+    } catch (err) {
+      alert(`Failed to add pet: ${err.message || 'Unknown error'}`);
+      console.error("Pet creation error:", err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const filteredPets = pets.filter((pet) =>
@@ -116,7 +214,7 @@ const CustomerPets = () => {
       {/* Header Section */}
       <div className="pets-header">
         <div className="header-content">
-          <h1>🐾 My Pets</h1>
+          <h1><FontAwesomeIcon icon={faPaw} /> My Pets</h1>
           <p>Manage your beloved companions and their health records</p>
         </div>
         <div className="header-stats">
@@ -131,28 +229,29 @@ const CustomerPets = () => {
         </div>
       </div>
 
-      {/* Search and Actions */}
-      <div className="pets-actions">
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search pets by name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="search-bar"
-          />
-          <span className="search-icon">🔍</span>
+      {/* Loading State */}
+      {loading && (
+        <div className="loading-container">
+          <FontAwesomeIcon icon={faSpinner} spin />
+          <span>Loading pets data...</span>
         </div>
-        <button className="add-pet-btn" onClick={() => setNewPetModal(true)}>
-          <span className="btn-icon">+</span>
-          Add New Pet
-        </button>
-      </div>
+      )}
 
-      {/* Pet Cards Grid */}
-      <div className="pets-grid">
-        {filteredPets.map((pet) => (
-          <div key={pet.id} className="pet-card">
+      {/* Error State */}
+      {error && (
+        <div className="error-container">
+          <FontAwesomeIcon icon={faExclamationTriangle} />
+          <span>{error}</span>
+        </div>
+      )}
+
+      {/* Pets Content */}
+      {!loading && !error && (
+        <>
+          {/* Pet Cards Grid */}
+          <div className="pets-grid">
+            {filteredPets.map((pet) => (
+              <div key={pet.id} className="pet-card">
             <div className="pet-header">
               <div className="pet-avatar">
                 {pet.photo ? (
@@ -215,7 +314,9 @@ const CustomerPets = () => {
             </div>
           </div>
         ))}
-      </div>
+          </div>
+        </>
+      )}
 
       {/* Pet Details Modal */}
       {selectedPet && (
