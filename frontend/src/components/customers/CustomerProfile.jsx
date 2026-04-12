@@ -271,35 +271,7 @@ const CustomerProfile = () => {
     }));
   };
 
-  // Handle account deletion
-  const handleDeleteAccount = async () => {
-    if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-      return;
-    }
-
-    try {
-      setSaving(true);
-      await apiRequest("/auth/delete-account", {
-        method: "DELETE"
-      });
-      
-      setMessage("Account deleted successfully. Redirecting to login...");
-      setMessageType("success");
-      setTimeout(() => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
-        window.location.href = "/login";
-      }, 2000);
-    } catch (err) {
-      setMessage(err.message || "Failed to delete account");
-      setMessageType("error");
-      console.error("Account deletion error:", err);
-      setTimeout(() => setMessage(""), 3000);
-    } finally {
-      setSaving(false);
-    }
-  };
-
+  
   // Fetch profile data on component mount
   useEffect(() => {
     fetchUserProfile();
@@ -639,33 +611,7 @@ const CustomerProfile = () => {
             </div>
           </div>
 
-          <div className="profile-card">
-            <div className="profile-section">
-              <h3>Account Management</h3>
-              <p className="warning-text">
-                Deleting your account is permanent and cannot be undone. All your data including 
-                bookings, pets information, and payment history will be permanently removed.
-              </p>
-              <div className="btn-group">
-                <button 
-                  className="btn-danger" 
-                  onClick={handleDeleteAccount}
-                  disabled={saving}
-                >
-                  {saving ? (
-                    <>
-                      <FontAwesomeIcon icon={faSpinner} spin /> Deleting Account...
-                    </>
-                  ) : (
-                    <>
-                      <FontAwesomeIcon icon={faTimes} /> Delete Account
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
+                  </>
       )}
     </div>
   );
