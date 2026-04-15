@@ -25,7 +25,7 @@ const VetRoutes = () => (
       {/* Nested routes */}
       <Route path="appointments" element={<VetAppointments />} />
       <Route path="history" element={<VetHistory history={[]} />} />
-      <Route path="customers" element={<VetCustomerProfiles customers={[]} />} />
+      <Route path="customer-profiles" element={<VetCustomerProfiles />} />
       <Route path="reports" element={<VetReports appointments={[]} />} />
       <Route path="receipt" element={<VetReceipt receipt={{}} />} />
       <Route path="profile" element={<VetProfile />} />

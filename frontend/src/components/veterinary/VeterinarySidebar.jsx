@@ -60,7 +60,7 @@ const VeterinarySidebar = ({ collapsed, onToggleCollapse }) => {
           
           <li className="nav-item">
             <NavLink
-              to="/veterinary/customers"
+              to="/veterinary/customer-profiles"
               className={({ isActive }) => (isActive ? "active" : "")}
               title="Customer Profiles"
             >
