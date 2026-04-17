@@ -14,6 +14,7 @@ import AppointmentList from "../components/receptionist/AppointmentList";
 import CheckInForm from "../components/receptionist/CheckInForm";
 import CheckOutForm from "../components/receptionist/CheckOutForm";
 import Reports from "../components/receptionist/Reports";
+import ReceptionistNotifications from "../components/receptionist/ReceptionistNotifications";
 
 const ReceptionistRoutes = () => (
   <Routes>
@@ -38,6 +39,7 @@ const ReceptionistRoutes = () => (
       <Route path="customers" element={<CustomerManagement />} />
       <Route path="customer-profile" element={<CustomersProfile />} />
       <Route path="profile" element={<ReceptionistProfile />} />
+      <Route path="notifications" element={<ReceptionistNotifications />} />
       <Route path="reports" element={<Reports />} />
     </Route>
   </Routes>

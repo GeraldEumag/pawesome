@@ -17,6 +17,7 @@ import {
   faRobot,
   faChevronDown,
   faChevronRight,
+  faBell,
 } from "@fortawesome/free-solid-svg-icons";
 import "./ReceptionistSidebar.css";
 
@@ -99,6 +100,17 @@ const ReceptionistSidebar = ({ collapsed, onToggleCollapse }) => {
             >
               <FontAwesomeIcon icon={faUser} />
               {!collapsed && <span>Profile</span>}
+            </NavLink>
+          </li>
+          
+          <li className="nav-item">
+            <NavLink
+              to="/receptionist/notifications"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              title="Notifications"
+            >
+              <FontAwesomeIcon icon={faBell} />
+              {!collapsed && <span>Notifications</span>}
             </NavLink>
           </li>
           
