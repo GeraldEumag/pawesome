@@ -12,6 +12,7 @@ import CustomerChatbot from "../components/customers/CustomerChatbot";
 import CustomerUserInfo from "../components/customers/CustomerUserInfo";
 import CustomerProfile from "../components/customers/CustomerProfile";
 import CustomerPayments from "../components/customers/CustomerPayments";
+import CustomerNotifications from "../components/customers/CustomerNotifications";
 
 const CustomerRoutes = () => (
   <Routes>
@@ -33,6 +34,7 @@ const CustomerRoutes = () => (
       <Route path="chatbot" element={<CustomerChatbot />} />
       <Route path="userinfo" element={<CustomerUserInfo />} />
       <Route path="profile" element={<CustomerProfile />} />
+      <Route path="notifications" element={<CustomerNotifications />} />
       <Route path="history" element={<CustomerReports />} />
 
       {/* Nested under reports */}
