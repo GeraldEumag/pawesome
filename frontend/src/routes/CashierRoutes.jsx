@@ -7,6 +7,7 @@ import CashierTransactions from "../components/cashier/CashierTransactions";
 import CashierHistory from "../components/cashier/CashierHistory";
 import CashierReports from "../components/cashier/CashierReports";
 import CashierProfile from "../components/cashier/CashierProfile";
+import CashierNotifications from "../components/cashier/CashierNotifications";
 
 const CashierRoutes = () => (
   <Routes>
@@ -27,6 +28,7 @@ const CashierRoutes = () => (
       <Route path="transactions" element={<CashierTransactions />} />
       <Route path="analytics" element={<CashierReports />} />
       <Route path="history" element={<CashierHistory />} />
+      <Route path="notifications" element={<CashierNotifications />} />
       <Route path="reports" element={<CashierReports />} />
       <Route path="profile" element={<CashierProfile />} />
     </Route>

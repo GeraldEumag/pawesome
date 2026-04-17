@@ -10,6 +10,7 @@ import {
   faBars,
   faUser,
   faReceipt,
+  faBell,
 } from "@fortawesome/free-solid-svg-icons";
 import "./CashierSidebar.css";
 
@@ -80,6 +81,17 @@ const CashierSidebar = ({ collapsed, onToggleCollapse }) => {
             >
               <FontAwesomeIcon icon={faHistory} />
               {!collapsed && <span>History</span>}
+            </NavLink>
+          </li>
+          
+          <li className="nav-item">
+            <NavLink
+              to="/cashier/notifications"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              title="Notifications"
+            >
+              <FontAwesomeIcon icon={faBell} />
+              {!collapsed && <span>Notifications</span>}
             </NavLink>
           </li>
           
