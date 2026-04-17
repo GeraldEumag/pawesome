@@ -6,6 +6,7 @@ import ManagerStaff from "../components/manager/ManagerStaff";
 import ManagerAttendance from "../components/manager/ManagerAttendance";
 import ManagerReports from "../components/manager/ManagerReports";
 import ManagerProfile from "../components/manager/ManagerProfile";
+import ManagerNotifications from "../components/manager/ManagerNotifications";
 
 const ManagerRoutes = () => (
   <Routes>
@@ -25,6 +26,7 @@ const ManagerRoutes = () => (
       <Route path="attendance" element={<ManagerAttendance />} />
       <Route path="tasks" element={<ManagerReports />} />
       <Route path="history" element={<ManagerAttendance />} />
+      <Route path="notifications" element={<ManagerNotifications />} />
       <Route path="analytics" element={<ManagerReports />} />
       <Route path="reports" element={<ManagerReports />} />
       <Route path="profile" element={<ManagerProfile />} />

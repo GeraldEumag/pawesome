@@ -11,6 +11,7 @@ import {
   faUser,
   faClipboardList,
   faTasks,
+  faBell,
 } from "@fortawesome/free-solid-svg-icons";
 import "./ManagerSidebar.css";
 
@@ -92,6 +93,17 @@ const ManagerSidebar = ({ collapsed, onToggleCollapse }) => {
             >
               <FontAwesomeIcon icon={faHistory} />
               {!collapsed && <span>Attendance Log</span>}
+            </NavLink>
+          </li>
+          
+          <li className="nav-item">
+            <NavLink
+              to="/manager/notifications"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              title="Notifications"
+            >
+              <FontAwesomeIcon icon={faBell} />
+              {!collapsed && <span>Notifications</span>}
             </NavLink>
           </li>
           
