@@ -24,7 +24,7 @@ const CustomerRoutes = () => (
         </ProtectedRoute>
       }
     >
-      {/* Default index route → dashboard overview */}
+      {/* Default index route */}
       <Route index element={<CustomerReports />} />
 
       {/* Core customer routes */}
