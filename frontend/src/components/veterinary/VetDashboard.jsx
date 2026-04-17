@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
@@ -15,6 +15,7 @@ import "./VetDashboard.css";
 
 const VetDashboard = () => {
   const name = localStorage.getItem("name") || "Veterinarian";
+  const navigate = useNavigate();
   const [theme, setTheme] = useState("light");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [unreadNotifications] = useState(3);
@@ -106,7 +107,7 @@ const VetDashboard = () => {
               </span>
             </NavLink>
 
-            <button className="icon-btn notification-btn" type="button">
+            <button className="icon-btn notification-btn" type="button" onClick={() => navigate('/veterinary/notifications')}>
               <FontAwesomeIcon icon={faBell} />
               {unreadNotifications > 0 && (
                 <span className="notification-badge">

@@ -11,6 +11,7 @@ import {
   faSignOutAlt,
   faBars,
   faUser,
+  faBell,
 } from "@fortawesome/free-solid-svg-icons";
 import "./VeterinarySidebar.css";
 
@@ -77,6 +78,17 @@ const VeterinarySidebar = ({ collapsed, onToggleCollapse }) => {
             >
               <FontAwesomeIcon icon={faHistory} />
               {!collapsed && <span>History</span>}
+            </NavLink>
+          </li>
+          
+          <li className="nav-item">
+            <NavLink
+              to="/veterinary/notifications"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              title="Notifications"
+            >
+              <FontAwesomeIcon icon={faBell} />
+              {!collapsed && <span>Notifications</span>}
             </NavLink>
           </li>
           
