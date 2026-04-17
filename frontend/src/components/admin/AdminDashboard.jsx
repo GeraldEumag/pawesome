@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
@@ -16,9 +16,16 @@ import { apiRequest } from "../../api/client";
 
 const AdminDashboard = () => {
   const name = localStorage.getItem("name") || "Admin";
+  const navigate = useNavigate();
   const [theme, setTheme] = useState("light");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [unreadNotifications] = useState(3);
+  const [unreadNotifications, setUnreadNotifications] = useState(3);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, title: "New user registration", message: "John Doe registered as a customer", time: "2 minutes ago", read: false },
+    { id: 2, title: "Appointment scheduled", message: "Dr. Smith has a new appointment at 3:00 PM", time: "5 minutes ago", read: false },
+    { id: 3, title: "System update", message: "Payment system maintenance scheduled", time: "1 hour ago", read: true },
+  ]);
   const location = useLocation();
 
   // Backend data states
@@ -28,6 +35,27 @@ const AdminDashboard = () => {
 
   const normalizedPath = location.pathname.replace(/\/+$/, "");
   const showOverview = normalizedPath === "/admin";
+
+  // Notification handlers
+  const toggleNotifications = () => {
+    navigate('/admin/notifications');
+  };
+
+  const markNotificationAsRead = (id) => {
+    setNotifications(prev => 
+      prev.map(notif => 
+        notif.id === id ? { ...notif, read: true } : notif
+      )
+    );
+    setUnreadNotifications(prev => Math.max(0, prev - 1));
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => 
+      prev.map(notif => ({ ...notif, read: true }))
+    );
+    setUnreadNotifications(0);
+  };
 
   // Fetch dashboard data from backend
   useEffect(() => {
@@ -161,7 +189,7 @@ const AdminDashboard = () => {
               </span>
             </NavLink>
 
-            <button className="icon-btn notification-btn" type="button">
+            <button className="icon-btn notification-btn" type="button" onClick={toggleNotifications}>
               <FontAwesomeIcon icon={faBell} />
               {unreadNotifications > 0 && (
                 <span className="notification-badge">
@@ -179,6 +207,40 @@ const AdminDashboard = () => {
             </button>
           </div>
         </header>
+
+        {/* Notifications Dropdown */}
+        {showNotifications && (
+          <div className="notifications-dropdown">
+            <div className="notifications-header">
+              <h3>Notifications</h3>
+              <button className="mark-all-read-btn" onClick={markAllAsRead}>
+                Mark all as read
+              </button>
+            </div>
+            <div className="notifications-list">
+              {notifications.length > 0 ? (
+                notifications.map(notif => (
+                  <div 
+                    key={notif.id} 
+                    className={`notification-item ${notif.read ? 'read' : 'unread'}`}
+                    onClick={() => markNotificationAsRead(notif.id)}
+                  >
+                    <div className="notification-content">
+                      <h4>{notif.title}</h4>
+                      <p>{notif.message}</p>
+                      <span className="notification-time">{notif.time}</span>
+                    </div>
+                    {!notif.read && <div className="notification-indicator"></div>}
+                  </div>
+                ))
+              ) : (
+                <div className="no-notifications">
+                  <p>No notifications</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {showOverview ? (
           <>

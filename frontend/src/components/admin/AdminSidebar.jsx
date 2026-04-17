@@ -15,6 +15,7 @@ import {
   faDollarSign,
   faFileInvoiceDollar,
   faRobot,
+  faBell,
 } from "@fortawesome/free-solid-svg-icons";
 import "./AdminSidebar.css";
 
@@ -90,6 +91,17 @@ const AdminSidebar = ({ collapsed, onToggleCollapse }) => {
             >
               <FontAwesomeIcon icon={faRobot} />
               {!collapsed && <span>Chatbot</span>}
+            </NavLink>
+          </li>
+
+          <li className="nav-item">
+            <NavLink
+              to="/admin/notifications"
+              className="nav-link"
+              title="Notifications"
+            >
+              <FontAwesomeIcon icon={faBell} />
+              {!collapsed && <span>Notifications</span>}
             </NavLink>
           </li>
 
